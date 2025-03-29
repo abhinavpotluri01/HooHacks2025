@@ -14,7 +14,7 @@ import os
 ##print(f"Saved JPG to: {output_path}")
 
 # Set your variables
-SERPAPI_KEY = '0681ae6f9e4eb0a4e25eba782d6fb9fc001365c784da6320481aeb5e74bd1c01'
+SERPAPI_KEY = os.getenv("SERPAPI_KEY")
 ##IMAGE_URL = 'https://i.imgur.com/lhZ6YI9.jpeg'  # replace with your hosted image URL
 IMAGE_URL = "https://i.imgur.com/o4S1WLG.jpeg"
 
