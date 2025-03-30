@@ -8,6 +8,7 @@ import {icons} from '@/constants/icons'
 import Entypo from '@expo/vector-icons/Entypo';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
+import * as FileSystem from 'expo-file-system';
 
 const search = () => {
 
@@ -33,9 +34,22 @@ const search = () => {
       });
   
       if (!result.canceled) {
+
+        const tempUri = result.assets[0].uri; // Temporary URI
+        const fileName = tempUri.split('/').pop(); // Extract the file name
+        const newPath = `${FileSystem.documentDirectory}${fileName}`; // Save to the app's document directory
+
+        // Move the file to the persistent directory
+        await FileSystem.moveAsync({
+          from: tempUri,
+          to: newPath,
+        });
+
+        console.log('Image saved to:', newPath);
+
         setForm({
           ...form,
-          image: result.assets[0].uri, // Store the captured image URI
+          image: newPath, // Store the captured image URI
         });
       }
     };
@@ -44,7 +58,7 @@ const search = () => {
       const result : any = await DocumentPicker.getDocumentAsync({
         type:
           selectType === "image"
-            ? ["image/png", "image/jpg"]
+            ? ["image/png", "image/jpg", "image/jpeg"]
             : ["video/mp4", "video/gif"],
       });
 

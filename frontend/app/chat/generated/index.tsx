@@ -5,6 +5,7 @@ import ShoePage from '@/components/ShoePage'
 import { useEffect, useState } from 'react'
 import { FlatList } from 'react-native'
 
+
 const EmptyState = () => {
     return (
     <View className="flex-col gap-y-4 mt-4 border rounded-xl border-zinc-700 px-2 py-2">
@@ -27,22 +28,27 @@ const index = () => {
     useEffect(() => {
         const handleFetch = async () => {
             try{
-            const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/shoe/${id}`, {
+                console.log(image)
+            const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/process-imgur-url`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    image_id: id
+                    url: image
                 })
             })
             const data = await response.json()
+            console.log(data)
             setShoeArray(data)
             }
             catch(err){
                 console.log(err)
             }
+            
         }
+
+        handleFetch();
     }, [])
 
   return (
@@ -52,7 +58,7 @@ const index = () => {
         showsVerticalScrollIndicator={true}
         contentContainerStyle={{
         minHeight: '100%',
-        paddingBottom: 20,
+        paddingBottom: 10,
         }}
         >
         <View className='mx-8 mt-12'>
@@ -63,7 +69,7 @@ const index = () => {
                 renderItem={({item}) => (
                 <ShoePage shoe={item}/>
                 )}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item : any) => item.global_rank.toString()}
                 numColumns={1}
                 
                 className="mt-8 pb-32 mx-2"
