@@ -20,12 +20,11 @@ const EmptyState = () => {
 const index = () => {
 
   const [shoeList, setShoeList] = useState([])
-  const [isLoaded, setLoaded] = useState(false)
   
       useEffect(() => {
           const handleFetch = async () => {
               try{
-              const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/get`, {
+              const response = await fetch(`${process.env.EXPO_PUBLIC_NGROK_URL}/shoe`, {
                   method: 'GET',
                   headers: {
                       'Content-Type': 'application/json',
@@ -33,8 +32,8 @@ const index = () => {
               })
               const data = await response.json()
               
-              setShoeList(data)
-              setLoaded(true)
+              setShoeList(data.data)
+
               }
               catch(err){
                   console.log(err)
@@ -60,9 +59,9 @@ const index = () => {
         
 
         <FlatList 
-          data={[]}
+          data={shoeList}
           renderItem={({item}) => (
-            <ShoeCard id={item}/>
+            <ShoeCard shoe={item}/>
           )}
           keyExtractor={(item) => item}
           numColumns={1}

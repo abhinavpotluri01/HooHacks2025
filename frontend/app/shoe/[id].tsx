@@ -13,7 +13,7 @@ const EmptyState = () => {
             <View className=' text-zinc-800 w-3/5 h-12 bg-zinc-500 rounded-2xl animate-pulse'></View>
             <View className=' w-2/5 h-8 bg-zinc-500 rounded-2xl animate-pulse mt-2'></View>
             
-            <View className='w-full rounded-full h-8 bg-zinc-500 py-1.5 px-5 text-white text-center flex items-center justify-center mt-2'>
+            <View className='w-full animate-pulse rounded-full h-8 bg-zinc-500 py-1.5 px-5 text-white text-center flex items-center justify-center mt-2'>
             </View>
         </View>
         </View>
@@ -21,29 +21,8 @@ const EmptyState = () => {
 }
 
 const index = () => {
-    const {image} = useLocalSearchParams()
-    const [shoeArray, setShoeArray] = useState([])
+    const {shoe , id} : {shoe : any, id: any}= useLocalSearchParams()
 
-    useEffect(() => {
-        const handleFetch = async () => {
-            try{
-            const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/shoe/${id}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    image_id: id
-                })
-            })
-            const data = await response.json()
-            setShoeArray(data)
-            }
-            catch(err){
-                console.log(err)
-            }
-        }
-    }, [])
 
   return (
     <>
@@ -59,11 +38,11 @@ const index = () => {
             <Text className="font-interExtraBold text-3xl text-zinc-800">Results</Text>
         
             <FlatList 
-                data={shoeArray}
+                data={shoe.realShoeArray}
                 renderItem={({item}) => (
                 <ShoePage shoe={item}/>
                 )}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item) => item.globalRanking}
                 numColumns={1}
                 
                 className="mt-8 pb-32 mx-2"

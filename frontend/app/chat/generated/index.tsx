@@ -1,10 +1,10 @@
-import { View, Text, ScrollView } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { useLocalSearchParams } from 'expo-router'
 import ShoePage from '@/components/ShoePage'
 import { useEffect, useState } from 'react'
 import { FlatList } from 'react-native'
-
+import { useRouter } from 'expo-router'
 
 const EmptyState = () => {
     return (
@@ -14,7 +14,7 @@ const EmptyState = () => {
             <View className=' text-zinc-800 w-3/5 h-12 bg-zinc-500 rounded-2xl animate-pulse'></View>
             <View className=' w-2/5 h-8 bg-zinc-500 rounded-2xl animate-pulse mt-2'></View>
             
-            <View className='w-full rounded-full h-8 bg-zinc-500 py-1.5 px-5 text-white text-center flex items-center justify-center mt-2'>
+            <View className='w-full animate-pulse rounded-full h-8 bg-zinc-500 py-1.5 px-5 text-white text-center flex items-center justify-center mt-2'>
             </View>
         </View>
         </View>
@@ -24,6 +24,46 @@ const EmptyState = () => {
 const index = () => {
     const {image} = useLocalSearchParams()
     const [shoeArray, setShoeArray] = useState([])
+    const router = useRouter()
+
+    const handlePost = () => {
+        const post = async () => {
+        
+            const realShoeArray = shoeArray.map((shoe : any) => ({
+                title: shoe.title,
+                price: shoe.price.slice(0, -1),
+                imageURL: shoe.image,
+                link: shoe.link,
+                globalRanking: shoe.global_rank,
+                }));
+
+            const shoe = {
+                imageURL: image.toString(),
+                realShoeArray: realShoeArray
+            }
+
+            console.log(shoe)
+
+
+            try{
+                const response = await fetch(`${process.env.EXPO_PUBLIC_NGROK_URL}/shoe`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(
+                        shoe
+                    )
+                })
+                const data = await response.json()
+                console.log(data)
+            }
+            catch(err){
+                console.log(err)
+            }
+        }
+        post();
+    }
 
     useEffect(() => {
         const handleFetch = async () => {
@@ -41,6 +81,7 @@ const index = () => {
             const data = await response.json()
             console.log(data)
             setShoeArray(data)
+            
             }
             catch(err){
                 console.log(err)
@@ -50,6 +91,14 @@ const index = () => {
 
         handleFetch();
     }, [])
+
+    useEffect(() => {
+        if(shoeArray.length > 0) {
+            handlePost()
+        }
+    }, [shoeArray])
+
+    
 
   return (
     <>
@@ -62,8 +111,12 @@ const index = () => {
         }}
         >
         <View className='mx-8 mt-12'>
+            <View className='flex-row items-center justify-between'>
             <Text className="font-interExtraBold text-3xl text-zinc-800">Results</Text>
-        
+            <TouchableOpacity onPress={() => router.push({pathname: '/(tabs)'})} className='w-28 rounded-full border-[2px] border-black bg-black py-1.5 px-5 text-white text-center flex items-center justify-center '>
+                <Text className='font-interSemiBold text-base text-white'>Home</Text>
+            </TouchableOpacity>
+            </View>
             <FlatList 
                 data={shoeArray}
                 renderItem={({item}) => (

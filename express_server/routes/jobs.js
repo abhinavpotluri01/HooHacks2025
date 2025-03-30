@@ -1,14 +1,11 @@
 import express from "express";
 const router = express.Router()
 
-import {jobGet, jobPost, jobUpdate, jobDelete} from "../controllers/shoe.controller.js"
+import {shoeGet, shoePost} from "../controllers/shoe.controller.js"
 
-router.get('/', jobGet)
+router.get('/', shoeGet)
 
-router.post('/', jobPost)
+router.post('/', shoePost)
 
-router.put('/:id', jobUpdate)
-
-router.delete('/:id', jobDelete)
 
 export default router

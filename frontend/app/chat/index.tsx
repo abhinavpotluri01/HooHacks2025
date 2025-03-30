@@ -201,7 +201,7 @@ const index = () => {
         </View>
 
         <View className='bg-zinc-300 py-6 px-4 mr-8 w-11/2 mt-6 rounded-xl'>
-        <Text className='font-interBold text-2xl mb-4'>CHAT, LET ME COOK</Text>
+        <Text className='font-interBold text-2xl mb-4'>CHAT, LET ME LOOK</Text>
         <Markdown
             style={{
               body: { color: 'black', fontFamily: 'Inter-SemiBold' },

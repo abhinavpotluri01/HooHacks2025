@@ -6,11 +6,31 @@ const shoeSchema = new mongoose.Schema({
         required: true
     },
     realShoeArray: [{
-        imageURL: String,
-        title: String,
-        price: String,
-        link: String
-    }]
+        
+            imageURL: {
+              type: String,
+              required: [true, "Image URL is required for each shoe"],
+            },
+            title: {
+              type: String,
+              required: [true, "Title is required for each shoe"],
+            },
+            price: {
+              type: String,
+              required: [true, "Price is required for each shoe"],
+              
+            },
+            link: {
+              type: String,
+              required: [true, "Link is required for each shoe"],
+            },
+            globalRanking: {
+              type: String,
+              required: [true, "Global ranking is required for each shoe"],
+              
+            },
+          
+    },]
 })
 
 

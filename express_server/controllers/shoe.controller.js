@@ -2,9 +2,9 @@
 import mongoose from "mongoose";
 import shoeModel from "../models/shoeSchema.js";
 
-export const jobGet = async(req, res)=>{
+export const shoeGet = async(req, res)=>{
     try{
-        const jobs = await jobModel.find()
+        const jobs = await shoeModel.find()
         res.status(200).json({
             success: true,
             data: jobs
@@ -21,7 +21,8 @@ export const jobGet = async(req, res)=>{
 export const shoePost = async (req, res)=>{
     const job = req.body
 
-    const jobCreate = new jobModel(job)
+    console.log(job)
+    const jobCreate = new shoeModel(job)
     try{
         await jobCreate.save()
         res.status(200).json({

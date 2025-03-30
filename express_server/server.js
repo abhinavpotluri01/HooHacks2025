@@ -1,8 +1,8 @@
 import express from "express"
 const app = express()
 import { connectDB } from "./config/db.js"
-import jobRouter from "./routes/jobs.js" 
-import profileRouter from './routes/profiles.js'
+import shoeRouter from "./routes/jobs.js" 
+
 
 import dotenv from 'dotenv'
 dotenv.config()
