@@ -2,9 +2,30 @@ import { View, Text, ScrollView } from 'react-native'
 import React from 'react'
 import { useLocalSearchParams } from 'expo-router'
 import ShoePage from '@/components/ShoePage'
+import { useEffect, useState } from 'react'
 
 const Shoe = () => {
-const {id} = useLocalSearchParams()
+    const {id} = useLocalSearchParams()
+    const [shoeArray, setShoeArray] = useState([])
+
+    useEffect(() => {
+        const handleFetch = async () => {
+            try{
+            const response = await fetch(`http://localhost:8000/api/shoe/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            const data = await response.json()
+            setShoeArray(data)
+            }
+            catch(err){
+                console.log(err)
+            }
+        }
+    }, [])
+
   return (
     <>
     <View className='absolute inset-0 -z-20 bg-[rgb(42, 42, 24)]' />

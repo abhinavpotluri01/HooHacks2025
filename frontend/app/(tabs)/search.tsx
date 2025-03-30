@@ -59,7 +59,7 @@ const search = () => {
         }
       } else {
         setTimeout(() => {
-          Alert.alert("Document picker canceled");
+          
         }, 100);
       }
     };
@@ -95,11 +95,19 @@ const search = () => {
           Alert.alert("Upload Failed", result.message || "Something went wrong.");
         }
       } catch (error) {
-        Alert.alert("Error", "An error occurred while uploading the image.");
+        Alert.alert("Error", "An error occurred while uploading the image. " + error);
       } finally {
         setUploading(false); // Hide the loading indicator
       }
     };
+
+    const handleSubmit = () => {
+      if (form.image) {
+        router.push({ pathname: '/chat', params: { image: form.image }})
+      } else {
+        Alert.alert("No image selected", "Please select an image before submitting.");
+      }
+    }
 
   return (
     <>
@@ -147,7 +155,7 @@ const search = () => {
         
 
         <View className='mt-2'>
-          <TouchableOpacity onPress={() => router.push({ pathname: '/chat', params: { image: form.image } })} className=' rounded-full border-[2px] border-black bg-black py-1.5 px-5 text-white text-center flex items-center justify-center'>
+          <TouchableOpacity onPress={() =>  handleSubmit()} className=' rounded-full border-[2px] border-black bg-black py-1.5 px-5 text-white text-center flex items-center justify-center'>
             <Text className='text-white font-inter'>{uploading ? 'Submitting' : "Submit"}</Text>
           </TouchableOpacity>
         </View>

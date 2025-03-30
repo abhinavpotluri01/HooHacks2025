@@ -1,11 +1,47 @@
-import { View, Text, Touchable } from 'react-native'
+import { View, Text, Touchable, Image } from 'react-native'
 import React from 'react'
 import { FlatList, ScrollView } from 'react-native'
 import ShoeCard from '@/components/ShoeCard'
 import { Link } from 'expo-router'
+import {useState, useEffect} from 'react'
+import {images}from '@/constants/images'
+
+const EmptyState = () => {
+  return (
+    <View className="flex-1 justify-center items-center mt-24">
+      <Image source={images.empty} className="w-72 h-72" resizeMode="contain" />  
+      <Text className="text-3xl font-interBold text-gray-500">Much Empty... </Text>
+      <Text className="text-lg font-interSemiBold text-gray-500">Please make some searches </Text>
+    </View>
+  )
+}
+
 const index = () => {
+
+  const [shoeList, setShoeList] = useState([])
+  
+      useEffect(() => {
+          const handleFetch = async () => {
+              try{
+              const response = await fetch(`https://b944-192-35-49-87.ngrok-free.app/get`, {
+                  method: 'GET',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+              })
+              const data = await response.json()
+              setShoeList(data)
+              }
+              catch(err){
+                  console.log(err)
+              }
+          }
+          handleFetch()
+      }, [])
+
   return (
     <>
+    
     <View className='absolute inset-0 -z-20 bg-[rgb(42, 42, 24)]' />
     <ScrollView className="flex-1"
       showsVerticalScrollIndicator={true}
@@ -19,7 +55,7 @@ const index = () => {
         
 
         <FlatList 
-          data={['1', '2']}
+          data={[]}
           renderItem={({item}) => (
             <ShoeCard id={item}/>
           )}
@@ -29,6 +65,11 @@ const index = () => {
           className="mt-8 pb-32 mx-2"
           
           scrollEnabled={false}
+          ListEmptyComponent={() => (
+                    <EmptyState
+                      
+                    />
+                  )}
           />
       
     </View>
@@ -37,6 +78,8 @@ const index = () => {
     </>
   )
 }
+
+
 
 
 
