@@ -8,7 +8,7 @@ def run_pipeline(image_path):
     }
 
     try:
-        image_url = image_path
+        image_url = "https://i.imgur.com/o7aHelA.png"
         offers = fetch_google_lens_data(image_url, proxies)
         #save_json(offers, "output_all_with_images.json")
 

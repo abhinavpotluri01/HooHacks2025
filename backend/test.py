@@ -1,8 +1,8 @@
 import requests
 
 def test_process_imgur_url():
-    url = "http://localhost:8080/process-imgur-url"
-    imgur_url = "https://i.imgur.com/o7aHelA.png"  # Already uploaded
+    url = "http://52.14.110.45:5000/process-imgur-url"
+    imgur_url = "https://imgur.com/a/3vXsnai"
 
     response = requests.post(url, json={"url": imgur_url})
 
