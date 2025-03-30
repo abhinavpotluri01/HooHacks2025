@@ -10,8 +10,7 @@ from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
 from google import genai
 from google.genai import types
-from PIL import Image
-import io
+
 
 from ipipeline import run_pipeline
 
@@ -22,33 +21,6 @@ os.makedirs("gen_images", exist_ok=True)
 app = Flask(__name__)
 CORS(app)
 
-GEMINI_API_KEYS = [
-    os.getenv("GEMINI_API_KEY"),
-    # os.getenv("GEMINI_API_KEY_II"),  # <== skipped on purpose
-    os.getenv("GEMINI_API_KEY_III"),
-    os.getenv("GEMINI_API_KEY_IV"),
-    os.getenv("GEMINI_API_KEY_V"),
-    os.getenv("GEMINI_API_KEY_VI"),
-    os.getenv("GEMINI_API_KEY_VII"),
-]
-
-
-class GeminiKeyManager:
-    def __init__(self, keys):
-        self.keys = [key for key in keys if key]  # Remove empty
-        self.index = 0
-
-    def get_key(self):
-        if not self.keys:
-            raise RuntimeError("No Gemini API keys available.")
-        return self.keys[self.index]
-
-    def rotate_key(self):
-        self.index = (self.index + 1) % len(self.keys)
-
-
-key_manager = GeminiKeyManager(GEMINI_API_KEYS)
-imgur_manager = ImgurClientManager(IMGUR_CLIENT_IDS)
 
 # -----------------------------------------------------------------------------
 # HELPER FUNCTIONS (unchanged except for removing extraneous prints / SSE calls)
@@ -88,25 +60,8 @@ def create_generate_content_config(seed, response_modalities=("text",)):
     )
 
 def save_binary_file(file_name, data):
-    """
-    Save 'data' to 'file_name'. 
-    Attempt to interpret data as an image, then compress lightly before saving.
-    If not an image, or if PIL fails, we simply do a raw binary write.
-    """
-
-    # Try to interpret the data as an image
-    try:
-        img = Image.open(io.BytesIO(data))
-        # If it's JPEG, set quality=98 (about 2% compression from max)
-        if file_name.lower().endswith((".jpg", ".jpeg")):
-            img.save(file_name, "JPEG", quality=98)
-        # For PNG or others, do a minimal optimize
-        else:
-            img.save(file_name, optimize=True)
-    except Exception:
-        # If it fails for any reason, just do a raw binary write
-        with open(file_name, "wb") as f:
-            f.write(data)
+    with open(file_name, "wb") as f:
+        f.write(data)
 
 def process_output_chunks(stream_result, image_name=None):
     """
@@ -161,7 +116,7 @@ def get_outfit_description(client, file_paths, seed=123):
             ],
         )
     ]
-    config_step1 = create_generate_content_config(seed=seed, response_modalities=["text"])
+    config_step1 = create_generate_content_config(seed=seed, response_modalities=["text"], aspect_ratio="1:1")
     model_name = "gemini-2.0-flash-exp-image-generation"
     stream_result = client.models.generate_content_stream(
         model=model_name,
@@ -206,7 +161,7 @@ def generate_shoe_image(client, seed, outfit_description):
             ],
         ),
     ]
-    config_step2 = create_generate_content_config(seed=seed, response_modalities=["image", "text"])
+    config_step2 = create_generate_content_config(seed=seed, response_modalities=["image", "text"],aspect_ratio="1:1")
     model_name = "gemini-2.0-flash-exp-image-generation"
 
     prefix = f"gen_images/GENERATED_SHOE_VERSION_{seed}"
@@ -245,7 +200,6 @@ def run_discriminator(client, seed, shoe_text, image_file_path):
                         "2) Pure white background.\n"
                         "3) No humans or body parts visible.\n"
                         "4) Is not a photo of someone wearing a shoe\n"
-                        "5) The shoe should be located in the center of the image \n"
                         "If it violates any of these guidelines, respond with exactly:\n"
                         '{"valid": false}\n'
                         "Otherwise respond with exactly:\n"
@@ -431,4 +385,4 @@ def sse_format(event, data):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=8080, debug=True)
