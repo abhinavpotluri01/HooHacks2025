@@ -44,7 +44,7 @@ const search = () => {
       const result : any = await DocumentPicker.getDocumentAsync({
         type:
           selectType === "image"
-            ? ["image/png", "image/jpg"]
+            ? ["image/png", "image/jpg", "image/jpeg"]
             : ["video/mp4", "video/gif"],
       });
 

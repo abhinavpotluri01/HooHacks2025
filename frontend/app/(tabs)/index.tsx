@@ -6,6 +6,7 @@ import { Link } from 'expo-router'
 import {useState, useEffect} from 'react'
 import {images}from '@/constants/images'
 
+
 const EmptyState = () => {
   return (
     <View className="flex-1 justify-center items-center mt-24">
@@ -19,22 +20,26 @@ const EmptyState = () => {
 const index = () => {
 
   const [shoeList, setShoeList] = useState([])
+  const [isLoaded, setLoaded] = useState(false)
   
       useEffect(() => {
           const handleFetch = async () => {
               try{
-              const response = await fetch(`https://b944-192-35-49-87.ngrok-free.app/get`, {
+              const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/get`, {
                   method: 'GET',
                   headers: {
                       'Content-Type': 'application/json',
                   },
               })
               const data = await response.json()
+              
               setShoeList(data)
+              setLoaded(true)
               }
               catch(err){
                   console.log(err)
               }
+
           }
           handleFetch()
       }, [])

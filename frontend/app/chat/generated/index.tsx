@@ -5,6 +5,7 @@ import ShoePage from '@/components/ShoePage'
 import { useEffect, useState } from 'react'
 import { FlatList } from 'react-native'
 
+
 const EmptyState = () => {
     return (
     <View className="flex-col gap-y-4 mt-4 border rounded-xl border-zinc-700 px-2 py-2">
@@ -27,22 +28,27 @@ const index = () => {
     useEffect(() => {
         const handleFetch = async () => {
             try{
-            const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/shoe/${id}`, {
+                console.log(image)
+            const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/process-imgur-url}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    image_id: id
+                    url: image
                 })
             })
             const data = await response.json()
+            console.log(data)
             setShoeArray(data)
             }
             catch(err){
                 console.log(err)
             }
+            
         }
+
+        handleFetch();
     }, [])
 
   return (

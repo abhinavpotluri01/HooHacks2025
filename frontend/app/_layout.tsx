@@ -34,6 +34,7 @@ export default function RootLayout() {
     <Stack.Screen name="(tabs)" options={{headerShown: false}} />
     <Stack.Screen name="shoe/[id]" options={{headerShown: false}} />
     <Stack.Screen name="chat/index" options={{headerShown: false}} />
+    <Stack.Screen name="chat/generated/index" options={{headerShown: false}} />
   </Stack>
   </>
   )

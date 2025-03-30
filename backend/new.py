@@ -1,62 +1,65 @@
-from flask import Flask, Response, stream_with_context
+import os
+import json
+import random
 import time
-from flask_cors import CORS
 import base64
-from flask import jsonify
+from flask import Flask, request, jsonify, Response
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})  # Allow all origins
-# SSE endpoint
 
-@app.route('/sse')
-def sse():
-    def generate():
-        print('works in backend')
-        # Simulate sending multiple images as Base64-encoded strings
-        image_paths = ['image1.png', 'image2.png']
-        for image_path in image_paths:
-            with open(image_path, 'rb') as image_file:
-                # Read the image as binary and encode it as Base64
-                encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
-                yield f"data:image/png;base64,{encoded_image}\n\n"  # Send the Base64 string as SSE data
-                time.sleep(5)  # Simulate a delay between messages
+def sse_format(event, data):
+    """Utility to format messages for Server-Sent Events."""
+    if not isinstance(data, str):
+        data = json.dumps(data)
+    return f"event: {event}\ndata: {data}\n\n"
 
-    return Response(stream_with_context(generate()), content_type='text/event-stream')
-
-
-@app.route('/get')
-def get():
-    print('works in backend')  # Log to confirm the endpoint is hit
-    return jsonify({"message": "Backend is working!"})  # Return a proper JSON response
-
-@app.route('/test')
-def test():
-    print('works in backend')  # Log to confirm the endpoint is hit
-
-    # Path to the image file
-    image_path = 'image1.png'  # Replace with the path to your image
+@app.route("/get-outfit-description", methods=["POST"])
+def endpoint_outfit_description():
+    """Endpoint that expects a base64 image in 'image_b64'."""
+    data = request.get_json()
+    if not data or "image_b64" not in data:
+        return jsonify({"error": "No 'image_b64' found"}), 400
 
     try:
-        # Read the image as binary and encode it as Base64
-        with open(image_path, 'rb') as image_file:
-            encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
+        # Decode and save the base64 image as a PNG
+        image_b64 = data["image_b64"]
+        image_bytes = base64.b64decode(image_b64)
+        with open("uploaded_image.png", "wb") as f:
+            f.write(image_bytes)
+    except Exception as e:
+        return jsonify({"error": f"Failed to decode image: {str(e)}"}), 400
 
-        # Return the Base64 string as a JSON response
-        return jsonify({
-            "message": "Image fetched successfully!",
-            "image": f"data:image/png;base64,{encoded_image}"  # Include the MIME type
-        })
+    return jsonify({
+        "outfit_description": "He is wearing navy pants and a casual streetwear vibe."
+    })
 
-    except FileNotFoundError:
-        return jsonify({
-            "message": "Image not found!",
-            "image": None
-        }), 404
+@app.route("/generate-shoes", methods=["POST"])
+def endpoint_generate_shoes():
+    """
+    Returns SSE events with a public image URL (no base64).
+    Sends 4 events, one every 20 seconds, to simulate 'generation time'.
+    """
+    data = request.get_json()
+    if not data or "outfit_description" not in data:
+        return jsonify({"error": "Missing 'outfit_description'"}), 400
 
+    def stream_valid_images():
+        for _ in range(4):
+            time.sleep(3)  # Simulate time to generate an image
 
+            seed = random.randint(0, 100)
+            shoe_text = f"Mock shoe description for seed {seed}"
+            # Just return a mock link instead of base64
+            image_url = "https://i.imgur.com/o7aHelA.png"
+            
+            payload = {
+                "seed": seed,
+                "shoe_text": shoe_text,
+                "image_url": image_url
+            }
+            yield sse_format("new_valid_image", payload)
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True, threaded=True)
+    return Response(stream_valid_images(), mimetype='text/event-stream')
 
-
-
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
