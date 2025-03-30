@@ -29,7 +29,7 @@ const index = () => {
         const handleFetch = async () => {
             try{
                 console.log(image)
-            const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/process-imgur-url}`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/process-imgur-url`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ const index = () => {
         showsVerticalScrollIndicator={true}
         contentContainerStyle={{
         minHeight: '100%',
-        paddingBottom: 20,
+        paddingBottom: 10,
         }}
         >
         <View className='mx-8 mt-12'>
@@ -69,7 +69,7 @@ const index = () => {
                 renderItem={({item}) => (
                 <ShoePage shoe={item}/>
                 )}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item : any) => item.global_rank.toString()}
                 numColumns={1}
                 
                 className="mt-8 pb-32 mx-2"
