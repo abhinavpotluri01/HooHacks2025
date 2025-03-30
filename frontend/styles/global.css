@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+
+.head_text {
+    @apply mt-5 text-5xl font-extrabold leading-[1.15] text-black sm:text-6xl font-inter;
+  }
+  
+  .black_btn {
+    @apply rounded-full border-[2px] border-black bg-black py-1.5 px-5 text-white transition-all hover:bg-white hover:text-black text-center text-sm font-inter flex items-center justify-center;
+  }
+  
+  .black_btn_borderless {
+    @apply rounded-lg border border-black bg-black py-1.5 text-white transition-all hover:bg-white hover:text-black text-center text-sm font-inter;
+  }
+  
+  .outline_btn {
+    @apply rounded-full border-[2px] border-black bg-white py-1.5 px-5 text-black transition-all hover:bg-black hover:text-white text-center text-sm font-inter flex items-center justify-center;
+  }
+  
+  .outline_btn_borderless {
+    @apply rounded-lg border bg-white py-1.5 text-black transition-all hover:bg-black hover:text-white text-center text-sm font-inter;
+  }
+  
+  .black_gradient {
+    @apply bg-gradient-to-r from-stone-200/[0.8] from-5% to-stone-300 to-60% opacity-[0.8] bg-clip-text text-transparent;
+  }
+  
+  .desc {
+    @apply mt-5 text-lg text-gray-600 sm:text-xl max-w-2xl;
+  }
+  
+  .glass_gradient {
+    @apply bg-gradient-to-tr from-zinc-200/[0.7] from-5% via-zinc-300/[0.7] via-30% to-zinc-200/[0.7] to-60%;
+  }
+  
+  .shadow_gradient {
+    @apply bg-gradient-to-b from-stone-300/[0.8] from-5% to-white to-60% opacity-[0.8];
+  }
+  
+  @layer base {
+    * {
+      @apply border-border;
+    }
+    body {
+      @apply bg-background text-foreground;
+    }
+  }
+  
+  .flex-center {
+    @apply flex justify-center items-center;
+  }
+  
+  .flex-start {
+    @apply flex justify-start items-start;
+  }
+  
+  .flex-end {
+    @apply flex justify-end items-center;
+  }
+  
+  .flex-between {
+    @apply flex justify-between items-center;
+  }
+  
+  
+  .prompt_layout {
+    @apply space-y-6 py-8 sm:columns-2 sm:gap-6 xl:columns-1;
+  }
+
+  */
