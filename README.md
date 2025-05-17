@@ -96,13 +96,6 @@ We believe Outfitted.AI can evolve into your go-to **style discovery companion**
 
 ---
 
-## 📦 Try It Out
-
-[🔗 GitHub Repository](https://github.com/yourusername/outfitted-ai)  
-_(Replace with actual link)_
-
----
-
 ## 🤝 Contributing
 
 We’re open to PRs, feedback, and collaborations.  
